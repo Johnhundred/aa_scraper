@@ -7,9 +7,22 @@
 * Node (& NPM)
 * Linux system (Hasn't been tested on anything else)
 * CRON or similar scheduler
+* .env file
 * Browser-based dynamic scraper
 
 Currently, this scraper functions based on a modification of my own ajax_scraper project, which means it requires a running scraper on localhost port 46464, which accepts a query variable by the name of url.
+
+##### .ENV File
+
+This file is not included in the repository, but is nevertheless necessary to connect to the Neo4j container. By default, both username and password are "neo4j", but the password will be prompted for change.
+
+Create a .env file in the root of the project folder, and set the following keys:
+
+* NEO4J_URL="bolt://localhost:7687"
+* NEO4J_USER=neo4j
+* NEO4J_PASSWORD=neo4j
+
+Remember to update the password environment variable when you have changed it.
 
 ## Operation
 
