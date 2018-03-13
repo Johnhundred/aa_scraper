@@ -57,7 +57,7 @@ const getCharacterLinks = async (links, nodeId) => {
   try {
     await bbPromise.each(links, (currentValue, index, length) => { // eslint-disable-line
       const job = Request({
-        uri: `http://localhost:46464/?url=${currentValue}`,
+        uri: `http://localhost:46464/?url=${currentValue.link}`,
         headers: {
           'User-Agent': 'Request-Promise',
         },
@@ -123,10 +123,11 @@ const getCharacterLinks = async (links, nodeId) => {
                 });
             }
 
-            await query(
-              `MATCH (c:Character {node_id: {node_id}}) WITH c
+            const queryText = `MATCH (c:Character {node_id: {node_id}}) WITH c
               MATCH (ch:Character {node_id: {node_id_new}}) WITH c, ch
-              MERGE (c)-[re:KNOWS]->(ch)`,
+              MERGE (c)-[re:${currentValue.type.toUpperCase()}]->(ch)`;
+            await query(
+              queryText,
               {
                 node_id: parseInt(nodeId, 10),
                 node_id_new: parseInt(newNodeId, 10),
@@ -164,7 +165,7 @@ const handleCharacter = async (html, nodeId) => {
       }
 
       if (i === 3) {
-        $('tr td a', elm).each((ii, elem) => {
+        $('.people tr:nth-child(1) td a', elm).each((ii, elem) => {
           let character = $(elem).attr('href');
           const lastThree = character[character.length - 4];
           if (lastThree !== '.png' && lastThree !== '.jpg' && lastThree !== 'jpeg' && lastThree !== '.gif' && character.indexOf('/files') === -1) {
@@ -173,6 +174,46 @@ const handleCharacter = async (html, nodeId) => {
             }
 
             if (character.indexOf('argentarchives.org') !== -1) {
+              character = {
+                type: 'friend',
+                link: character,
+              };
+              linkedCharacters.push(character);
+            }
+          }
+        });
+
+        $('.people tr:nth-child(2) td a', elm).each((ii, elem) => {
+          let character = $(elem).attr('href');
+          const lastThree = character[character.length - 4];
+          if (lastThree !== '.png' && lastThree !== '.jpg' && lastThree !== 'jpeg' && lastThree !== '.gif' && character.indexOf('/files') === -1) {
+            if (character[0] !== 'h') {
+              character = `https://www.argentarchives.org${character}`;
+            }
+
+            if (character.indexOf('argentarchives.org') !== -1) {
+              character = {
+                type: 'related',
+                link: character,
+              };
+              linkedCharacters.push(character);
+            }
+          }
+        });
+
+        $('.people tr:nth-child(3) td a', elm).each((ii, elem) => {
+          let character = $(elem).attr('href');
+          const lastThree = character[character.length - 4];
+          if (lastThree !== '.png' && lastThree !== '.jpg' && lastThree !== 'jpeg' && lastThree !== '.gif' && character.indexOf('/files') === -1) {
+            if (character[0] !== 'h') {
+              character = `https://www.argentarchives.org${character}`;
+            }
+
+            if (character.indexOf('argentarchives.org') !== -1) {
+              character = {
+                type: 'rival',
+                link: character,
+              };
               linkedCharacters.push(character);
             }
           }
@@ -180,7 +221,7 @@ const handleCharacter = async (html, nodeId) => {
       }
 
       if (i === 4) {
-        $('tr td a', elm).each((ii, elem) => {
+        $('.people tr:nth-child(1) td a', elm).each((ii, elem) => {
           let character = $(elem).attr('href');
           const lastThree = character[character.length - 4];
           if (lastThree !== '.png' && lastThree !== '.jpg' && lastThree !== 'jpeg' && lastThree !== '.gif' && character.indexOf('/files') === -1) {
@@ -189,6 +230,28 @@ const handleCharacter = async (html, nodeId) => {
             }
 
             if (character.indexOf('argentarchives.org') !== -1) {
+              character = {
+                type: 'loves',
+                link: character,
+              };
+              linkedCharacters.push(character);
+            }
+          }
+        });
+
+        $('.people tr:nth-child(2) td a', elm).each((ii, elem) => {
+          let character = $(elem).attr('href');
+          const lastThree = character[character.length - 4];
+          if (lastThree !== '.png' && lastThree !== '.jpg' && lastThree !== 'jpeg' && lastThree !== '.gif' && character.indexOf('/files') === -1) {
+            if (character[0] !== 'h') {
+              character = `https://www.argentarchives.org${character}`;
+            }
+
+            if (character.indexOf('argentarchives.org') !== -1) {
+              character = {
+                type: 'hates',
+                link: character,
+              };
               linkedCharacters.push(character);
             }
           }
