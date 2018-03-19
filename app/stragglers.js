@@ -281,7 +281,7 @@ const getCharacterInfo = async (link, nodeId) => {
 
 (async () => {
   try {
-    const stragglers = await query(
+    let stragglers = await query(
       `MATCH (c:Character) WHERE NOT EXISTS(c.updated_last) WITH c
       RETURN c.node_id AS node_id LIMIT 10`,
       {},
@@ -289,6 +289,20 @@ const getCharacterInfo = async (link, nodeId) => {
       .catch((err) => {
         throw err;
       });
+
+    if (stragglers.records.length < 10) {
+      const newLimit = 10 - stragglers.records.length;
+      const extras = await query(
+        `MATCH (c:Character) WHERE EXISTS(c.updated_last) WITH c
+        RETURN c.node_id AS node_id ORDER BY c.updated_last ASC LIMIT ${newLimit}`,
+        {},
+      )
+        .catch((err) => {
+          throw err;
+        });
+
+      stragglers = stragglers.records.concat(extras.records);
+    }
 
     await bbPromise.each(stragglers.records, (currentValue, index, length) => { // eslint-disable-line
       debug('Beginning one record.');
