@@ -1,2 +1,2 @@
 adventures: npm run scrape
-stragglers: npm run scrape:stragglers
+stragglers: npm run strag
