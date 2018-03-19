@@ -57,7 +57,7 @@ const getCharacterLinks = async (links, nodeId) => {
   try {
     await bbPromise.each(links, (currentValue, index, length) => { // eslint-disable-line
       const job = Request({
-        uri: `http://localhost:46464/?url=${currentValue.link}`,
+        uri: currentValue.link,
         headers: {
           'User-Agent': 'Request-Promise',
         },
@@ -289,7 +289,7 @@ const handleCharacter = async (html, nodeId) => {
 const getCharacterInfo = async (link, nodeId) => {
   try {
     const character = Request({
-      uri: `http://localhost:46464/?url=${link}`,
+      uri: link,
       headers: {
         'User-Agent': 'Request-Promise',
       },
