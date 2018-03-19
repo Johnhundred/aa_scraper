@@ -354,6 +354,7 @@ const getCharacterInfo = async (link, nodeId) => {
 
     process.exit(0);
   } catch (err) {
+    debug(JSON.stringify(err));
     const stack = err.stack.split('\n');
     stack.forEach((line) => {
       debug('ERROR:', line);

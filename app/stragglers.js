@@ -5,20 +5,31 @@ const titleCase = require('title-case');
 const cheerio = require('cheerio');
 const { query } = require('./db/index.js');
 
+const includeHeaders = (body, response, resolveWithFullResponse) => { // eslint-disable-line
+  const obj = {
+    headers: response.headers,
+    data: body,
+  };
+
+  return obj;
+};
+
 const getCharacterLinks = async (links, nodeId) => {
   try {
     await bbPromise.each(links, (currentValue, index, length) => { // eslint-disable-line
+      // uri: `http://localhost:46464/?url=${currentValue.link}`,
       const job = Request({
-        uri: `http://localhost:46464/?url=${currentValue.link}`,
+        uri: currentValue.link,
         headers: {
-          'User-Agent': 'AA-Network-Scraper',
+          'User-Agent': 'AA-Network-Scraper-Promise',
         },
         json: true,
+        transform: includeHeaders,
       })
         .then(async (res) => {
           debug('Received AA page.');
           let isCharacter = false;
-          const $ = cheerio.load(res);
+          const $ = cheerio.load(res.data);
           $('.breadcrumb a').each((i, elm) => {
             if ($(elm).text() === 'People') {
               isCharacter = true;
@@ -241,10 +252,11 @@ const handleCharacter = async (html, nodeId) => {
 
 const getCharacterInfo = async (link, nodeId) => {
   try {
+    // uri: `http://localhost:46464/?url=${link}`,
     const character = Request({
-      uri: `http://localhost:46464/?url=${link}`,
+      uri: link,
       headers: {
-        'User-Agent': 'AA-Network-Scraper',
+        'User-Agent': 'AA-Network-Scraper-Promise',
       },
       json: true,
     })
@@ -270,8 +282,8 @@ const getCharacterInfo = async (link, nodeId) => {
 (async () => {
   try {
     const stragglers = await query(
-      `MATCH (c:Character) WHERE NOT EXISTS(c.updated_last) WITH c, c.updated_last AS updated
-      RETURN c.node_id AS node_id ORDER BY updated ASC LIMIT 10`,
+      `MATCH (c:Character) WHERE NOT EXISTS(c.updated_last) WITH c
+      RETURN c.node_id AS node_id LIMIT 10`,
       {},
     )
       .catch((err) => {
@@ -310,6 +322,7 @@ const getCharacterInfo = async (link, nodeId) => {
 
     process.exit(0);
   } catch (err) {
+    debug(JSON.stringify(err));
     const stack = err.stack.split('\n');
     stack.forEach((line) => {
       debug('ERROR:', line);
