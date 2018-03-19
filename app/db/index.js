@@ -17,6 +17,12 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
+process.on('unhandledRejection', (err) => {
+  debug(`Caught unhandledRejection: ${err}\n`);
+  driver.close();
+  process.exit(0);
+});
+
 const query = async (queryText, params) => {
   try {
     const session = driver.session();
@@ -30,6 +36,7 @@ const query = async (queryText, params) => {
         return result;
       })
       .catch((error) => {
+        session.close();
         throw error;
       });
 
