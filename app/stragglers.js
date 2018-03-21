@@ -38,6 +38,7 @@ const getCharacterLinks = async (links, nodeId) => {
 
           if (isCharacter) {
             let name = null;
+            let race = null;
             let guild = null;
 
             $('.people').each((i, elm) => {
@@ -47,6 +48,8 @@ const getCharacterLinks = async (links, nodeId) => {
               }
 
               if (i === 1) {
+                race = $('.people:first-child tr:first-child td', elm).text();
+                race = race.trim();
                 guild = $('tr td a', elm).text();
                 guild = titleCase(guild).trim();
               }
@@ -60,10 +63,12 @@ const getCharacterLinks = async (links, nodeId) => {
               await query(
                 `MERGE (g:Guild {name: {guild}}) WITH g
                 MERGE (c:Character {node_id: {node_id}})
-                SET c.name = {name} WITH g, c
+                SET c.name = {name},
+                c.race = {race} WITH g, c
                 MERGE (g)<-[rel:MEMBER_OF]-(c)`,
                 {
                   name: titleCase(name).trim(),
+                  race: titleCase(race).trim(),
                   node_id: parseInt(newNodeId, 10),
                   guild,
                 },
@@ -74,9 +79,11 @@ const getCharacterLinks = async (links, nodeId) => {
             } else {
               await query(
                 `MERGE (c:Character {node_id: {node_id}})
-                SET c.name = {name}`,
+                SET c.name = {name},
+                c.race = {race}`,
                 {
                   name: titleCase(name).trim(),
+                  race: titleCase(race).trim(),
                   node_id: parseInt(newNodeId, 10),
                   guild,
                 },
@@ -121,11 +128,13 @@ const handleCharacter = async (html, nodeId) => {
   try {
     const $ = cheerio.load(html);
     let guild = null;
+    let race = null;
     const linkedCharacters = [];
 
     $('.people').each((i, elm) => {
       if (i === 1) {
         guild = $('tr td a', elm).text();
+        race = $('.people tr:nth-child(1) td', elm).text();
       }
 
       if (i === 3) {
@@ -223,14 +232,17 @@ const handleCharacter = async (html, nodeId) => {
       }
     });
 
+    race = titleCase(race).trim();
     guild = titleCase(guild).trim();
     if (guild !== '' && guild.toLowerCase() !== 'none' && guild !== '-') {
       await query(
-        `MATCH (c:Character {node_id: {node_id}})
-        MERGE (g:Guild {name: {name}})
+        `MERGE (c:Character {node_id: {node_id}})
+        SET c.race = {race} WITH c
+        MERGE (g:Guild {name: {name}}) WITH c, g
         MERGE (g)<-[r:MEMBER_OF]-(c)`,
         {
           name: guild,
+          race,
           node_id: parseInt(nodeId, 10),
         },
       )
