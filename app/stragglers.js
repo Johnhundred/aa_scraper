@@ -313,8 +313,8 @@ const getCharacterInfo = async (link, nodeId) => {
           throw err;
         });
 
-      if (extras !== null) {
-        stragglers = stragglers.records.concat(extras.records);
+      if (extras.records !== null) {
+        stragglers.records = stragglers.records.concat(extras.records);
       }
     }
 
