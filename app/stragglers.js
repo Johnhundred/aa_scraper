@@ -302,6 +302,8 @@ const getCharacterInfo = async (link, nodeId) => {
         throw err;
       });
 
+    debug(stragglers);
+
     if (stragglers.records.length < 10) {
       const newLimit = 10 - stragglers.records.length;
       const extras = await query(
