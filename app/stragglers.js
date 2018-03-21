@@ -49,7 +49,7 @@ const getCharacterLinks = async (links, nodeId) => {
 
               if (i === 1) {
                 race = $('.people:first-child tr:first-child td', elm).text();
-                race = race.trim();
+                race = titleCase(race).trim();
                 guild = $('tr td a', elm).text();
                 guild = titleCase(guild).trim();
               }
