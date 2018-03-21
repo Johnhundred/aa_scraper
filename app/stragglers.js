@@ -315,7 +315,9 @@ const getCharacterInfo = async (link, nodeId) => {
           throw err;
         });
 
-      stragglers = stragglers.records.concat(extras.records);
+      if (extras !== null) {
+        stragglers = stragglers.records.concat(extras.records);
+      }
     }
 
     await bbPromise.each(stragglers.records, (currentValue, index, length) => { // eslint-disable-line
