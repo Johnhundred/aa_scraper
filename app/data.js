@@ -54,6 +54,106 @@ const color = (startNode) => {
   return startNode;
 };
 
+const getSpecificData = async (name, chainLinks) => {
+  try {
+    let nodes = [];
+    const links = [];
+    const numberOfLinks = parseInt(chainLinks, 10);
+    let queryText;
+
+    if (numberOfLinks === 1) {
+      queryText = 'MATCH path=({name: {name}})-[]-() RETURN *';
+    } else if (numberOfLinks === 2) {
+      queryText = 'MATCH path=({name: {name}})-[]-()-[]-() RETURN *';
+    } else if (numberOfLinks === 3) {
+      queryText = 'MATCH path=({name: {name}})-[]-()-[]-()-[]-() RETURN *';
+    }
+
+    const data = await query(
+      queryText,
+      {
+        name,
+      },
+    )
+      .catch((err) => {
+        throw err;
+      });
+
+    const uniq = (a) => {
+      const seen = {};
+      return a.filter((item) => { // eslint-disable-line
+        return seen.hasOwnProperty(item.id) ? false : (seen[item.id] = true); // eslint-disable-line
+      });
+    };
+
+    data.records.forEach((record) => {
+      let segments = [];
+      record._fields.forEach((field) => { // eslint-disable-line
+        if (field.hasOwnProperty('segments')) { // eslint-disable-line
+          segments = segments.concat(field.segments);
+        }
+      });
+
+      segments.forEach((segment) => { // eslint-disable-line
+        const start = segment.start; // eslint-disable-line
+        let startNode = {
+          id: start.properties.name,
+          label: start.labels[0],
+          race: start.properties.race,
+          group: 1,
+        };
+
+        startNode = color(startNode);
+
+        nodes.push(startNode);
+
+        const end = segment.end; // eslint-disable-line
+        let endNode = {
+          id: end.properties.name,
+          label: end.labels[0],
+          race: end.properties.race,
+          group: 1,
+        };
+
+        endNode = color(endNode);
+
+        if (endNode.label === 'Guild') {
+          endNode.group = 2;
+        }
+
+        nodes.push(endNode);
+
+        const rel = segment.relationship; // eslint-disable-line
+        const relData = {
+          source: startNode.id,
+          target: endNode.id,
+          type: rel.type,
+        };
+
+        links.push(relData);
+      });
+    });
+
+    nodes = uniq(nodes);
+
+    const d3Data = {
+      nodes,
+      links,
+    };
+
+    return d3Data;
+
+    // fs.writeFile('./wat.json', JSON.stringify(d3Data), (err) => {
+    //   if (err) throw err;
+    //   console.log('The file has been saved!');
+    //   process.exit(0);
+    //   return true;
+    // });
+  } catch (err) {
+    throw err;
+  }
+};
+
 const getAllData = async () => {
   try {
     let nodes = [];
@@ -148,6 +248,13 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
+});
+
+app.get('/:name/:links', async (req, res) => {
+  const name = req.params.name;
+  const links = req.params.links;
+  const data = await getSpecificData(name, links);
+  res.send(data);
 });
 
 app.get('/', async (req, res) => {
