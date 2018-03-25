@@ -1,6 +1,9 @@
 const debug = require('debug')('data');
 const { query } = require('./db/index.js');
-const fs = require('fs');
+// const fs = require('fs');
+const express = require('express');
+
+const app = express();
 
 const color = (startNode) => {
   switch (startNode.race) {
@@ -50,13 +53,13 @@ const color = (startNode) => {
   return startNode;
 };
 
-(async () => {
+const getAllData = async () => {
   try {
     let nodes = [];
     const links = [];
 
     const data = await query(
-      'MATCH path=(c:Character)-[]-() RETURN *',
+      'MATCH path=()-[]-() RETURN *',
       {
         name: 'Nymi',
       },
@@ -128,13 +131,22 @@ const color = (startNode) => {
       links,
     };
 
-    fs.writeFile('./wat.json', JSON.stringify(d3Data), (err) => {
-      if (err) throw err;
-      console.log('The file has been saved!');
-      process.exit(0);
-      return true;
-    });
+    return d3Data;
+
+    // fs.writeFile('./wat.json', JSON.stringify(d3Data), (err) => {
+    //   if (err) throw err;
+    //   console.log('The file has been saved!');
+    //   process.exit(0);
+    //   return true;
+    // });
   } catch (err) {
     throw err;
   }
-})();
+};
+
+app.get('/', async (req, res) => {
+  const data = await getAllData();
+  res.send(data);
+});
+
+app.listen(3000);
