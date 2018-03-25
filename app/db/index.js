@@ -19,8 +19,8 @@ process.on('uncaughtException', (err) => {
 
 process.on('unhandledRejection', (err) => {
   debug(`Caught unhandledRejection: ${err}\n`);
-  driver.close();
-  process.exit(0);
+  // driver.close();
+  // process.exit(0);
 });
 
 const query = async (queryText, params) => {
