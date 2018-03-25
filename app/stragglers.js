@@ -325,7 +325,9 @@ const getCharacterInfo = async (link, nodeId) => {
 
       const job = getCharacterInfo(nodeLink, nodeId)
         .catch((err) => {
-          throw err;
+          if (err.name !== 'StatusCodeError') {
+            throw err;
+          }
         });
 
       return job;
