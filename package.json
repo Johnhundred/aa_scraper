@@ -12,8 +12,10 @@
     "test:coverage": "export NODE_ENV=testing && nyc mocha test/*.js --timeout 5000 --recursive --exit",
     "scrape": "node ./app/index.js",
     "strag": "node ./app/stragglers.js",
+    "data": "node ./app/data.js",
     "dev": "export DEBUG=* && nodemon --ignore 'neo4j_data/**/*.*' --ignore 'logs/**/*.*' ./app/index.js",
     "dev:stragglers": "export DEBUG=* && nodemon --ignore 'neo4j_data/**/*.*' --ignore 'logs/**/*.*' ./app/stragglers.js",
+    "dev:data": "export DEBUG=* && nodemon --ignore 'neo4j_data/**/*.*' --ignore 'logs/**/*.*' ./app/data.js",
     "lint": "./node_modules/eslint/bin/eslint.js app/*.js app/**/*.js test/**/*.js"
   },
   "author": "Johannes Skjærbæk",
