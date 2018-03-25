@@ -83,7 +83,6 @@ const getAllData = async () => {
           segments = segments.concat(field.segments);
         }
       });
-      debug(JSON.stringify(segments));
 
       segments.forEach((segment) => { // eslint-disable-line
         const start = segment.start; // eslint-disable-line
