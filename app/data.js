@@ -4,6 +4,7 @@ const { query } = require('./db/index.js');
 const express = require('express');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 const color = (startNode) => {
   switch (startNode.race) {
@@ -149,4 +150,4 @@ app.get('/', async (req, res) => {
   res.send(data);
 });
 
-app.listen(3000);
+app.listen(PORT);
