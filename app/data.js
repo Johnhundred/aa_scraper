@@ -1,7 +1,9 @@
 const debug = require('debug')('data');
 const { query } = require('./db/index.js');
-// const fs = require('fs');
 const express = require('express');
+const titleCase = require('title-case');
+const cors = require('cors');
+const helmet = require('helmet');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -244,14 +246,17 @@ const getAllData = async () => {
   }
 };
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
+app.use(cors());
+app.use(helmet());
+
+app.get('/update/:name', async (req, res) => {
+  const name = titleCase(req.params.name).trim();
+  const data = await getSpecificData(name, 1);
+  res.send(data);
 });
 
 app.get('/:name/:links', async (req, res) => {
-  const name = req.params.name;
+  const name = titleCase(req.params.name).trim();
   const links = req.params.links;
   const data = await getSpecificData(name, links);
   res.send(data);
