@@ -6,9 +6,8 @@
 * Docker-compose
 * Node (& NPM)
 * Linux system (Hasn't been tested on anything else)
-* CRON or similar scheduler
+* CRON or similar scheduler (Heroku scheduler will also do)
 * .env file
-* Browser-based dynamic scraper
 
 Currently, this scraper functions based on a modification of my own ajax_scraper project, which means it requires a running scraper on localhost port 46464, which accepts a query variable by the name of url.
 
@@ -25,6 +24,8 @@ Create a .env file in the root of the project folder, and set the following keys
 Remember to update the password environment variable when you have changed it.
 
 ## Operation
+
+Example, with extremely barebones frontend: https://aa-network.herokuapp.com/
 
 #### Development
 
