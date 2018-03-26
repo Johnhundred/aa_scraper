@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 const color = (startNode) => {
   switch (startNode.race) {
     case 'Night Elf':
-      startNode.group = 6;
+      startNode.group = 3;
       break;
     case 'Draenei':
       startNode.group = 4;
@@ -20,7 +20,7 @@ const color = (startNode) => {
       startNode.group = 5;
       break;
     case 'Gnome':
-      startNode.group = 3;
+      startNode.group = 6;
       break;
     case 'Dwarf':
       startNode.group = 7;
@@ -47,7 +47,19 @@ const color = (startNode) => {
       startNode.group = 14;
       break;
     case 'Pandaren':
-      startNode.group = 14;
+      startNode.group = 15;
+      break;
+    case 'Nightborne':
+      startNode.group = 16;
+      break;
+    case 'Void Elf':
+      startNode.group = 17;
+      break;
+    case 'Lightforged Draenei':
+      startNode.group = 18;
+      break;
+    case 'Highmountain Tauren':
+      startNode.group = 19;
       break;
     default:
       startNode.group = 1;
