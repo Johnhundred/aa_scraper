@@ -293,7 +293,7 @@ const getCharacterInfo = async (link, nodeId) => {
 
 (async () => {
   try {
-    let stragglers = await query(
+    const stragglers = await query(
       `MATCH (c:Character) WHERE NOT EXISTS(c.updated_last) WITH c
       RETURN c.node_id AS node_id LIMIT 10`,
       {},
