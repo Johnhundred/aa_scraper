@@ -68,8 +68,8 @@ const handleGuildPage = async (html) => {
     });
 
     // Get link to 5 most recently edited guilds
-    guildLinks = guildLinks.slice(0, 5);
-    guildNames = guildNames.slice(0, 5);
+    guildLinks = guildLinks.slice(0, 10);
+    guildNames = guildNames.slice(0, 10);
 
     await bbPromise.each(guildLinks, (currentValue, index, length) => { // eslint-disable-line
       // Request guild page, parse it with cheerio, get character links
