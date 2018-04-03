@@ -43,7 +43,7 @@ const saveMain = async (obj) => {
           throw err;
         });
 
-      debug('Character saved.');
+      debug(`Character saved: ${titleCase(currentValue).trim()}`);
       return job;
     });
 

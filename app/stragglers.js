@@ -27,7 +27,6 @@ const getCharacterLinks = async (links, nodeId) => {
         transform: includeHeaders,
       })
         .then(async (res) => {
-          debug('Received AA page.');
           let isCharacter = false;
           const $ = cheerio.load(res.data);
           $('.breadcrumb a').each((i, elm) => {
@@ -54,6 +53,8 @@ const getCharacterLinks = async (links, nodeId) => {
                 guild = titleCase(guild).trim();
               }
             });
+
+            debug(`Received AA page: ${titleCase(name).trim()}`);
 
             let temp = $('div.ntype-usernode').attr('id');
             temp = temp.split('-');
@@ -273,7 +274,7 @@ const getCharacterInfo = async (link, nodeId) => {
       json: true,
     })
       .then(async (res) => {
-        debug('Received AA page.');
+        debug('Received AA page of parent character.');
         await handleCharacter(res, nodeId)
           .catch((err) => {
             throw err;

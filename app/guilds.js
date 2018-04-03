@@ -16,7 +16,7 @@ const getSingleGuild = async (link, guildName) => {
       json: true,
     })
       .then(async (html) => {
-        debug('Received single guild page.');
+        debug(`Received single guild page: ${guildName}`);
         // Parse guild page with cheerio
         const $ = cheerio.load(html);
         const characterLinks = [];
@@ -99,7 +99,6 @@ const getSingleCharacter = async (link, guildName) => {
       json: true,
     })
       .then(async (res) => {
-        debug('Received AA page.');
         let isCharacter = false;
         const $ = cheerio.load(res);
         $('.breadcrumb a').each((i, elm) => {
@@ -118,6 +117,8 @@ const getSingleCharacter = async (link, guildName) => {
               name = name.trim();
             }
           });
+
+          debug(`Received AA page of character: ${titleCase(name).trim()}`);
 
           let temp = $('div.ntype-usernode').attr('id');
           temp = temp.split('-');
