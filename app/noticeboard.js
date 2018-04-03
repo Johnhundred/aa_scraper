@@ -1,5 +1,5 @@
 const Request = require('request-promise-native');
-const debug = require('debug')('index');
+const debug = require('debug')('notice');
 const bbPromise = require('bluebird');
 const titleCase = require('title-case');
 const cheerio = require('cheerio');
