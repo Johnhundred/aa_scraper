@@ -130,9 +130,16 @@ const handleCharacter = async (html, nodeId) => {
     const $ = cheerio.load(html);
     let guild = null;
     let race = null;
+    let name = null;
     const linkedCharacters = [];
 
     $('.people').each((i, elm) => {
+      if (i === 0) {
+        name = $('.people:first-child tr:first-child td', elm).text();
+        name = name.trim();
+        debug(`Received AA page of parent character: ${titleCase(name).trim()}`);
+      }
+
       if (i === 1) {
         guild = $('tr td a', elm).text();
         race = $('.people tr:nth-child(1) td', elm).text();
@@ -274,7 +281,7 @@ const getCharacterInfo = async (link, nodeId) => {
       json: true,
     })
       .then(async (res) => {
-        debug('Received AA page of parent character.');
+        // Received AA page
         await handleCharacter(res, nodeId)
           .catch((err) => {
             throw err;
