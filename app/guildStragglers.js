@@ -188,15 +188,19 @@ const getCharacterInfo = async (aCharacters) => {
   try {
     const stragglers = query(
       `MATCH (g:Guild) WHERE NOT EXISTS(g.updated_last) WITH g
-      RETURN g.name AS name, ID(g) AS id LIMIT 5`,
+      RETURN g.name AS name, ID(g) AS id LIMIT 50`,
       {},
     )
       .then(async (result) => {
-        const names = [];
+        let names = [];
 
         result.records.forEach((record) => {
           names.push(record.get('name'));
         });
+
+        const actualNames = [];
+        actualNames.push(names[Math.floor(Math.random() * names.length)]);
+        names = actualNames;
         debug(`Found guilds: ${names}`);
 
         // Parse guild page with cheerio

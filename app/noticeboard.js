@@ -164,7 +164,7 @@ const handleCharacter = async (html, nodeId) => {
         guild = $('tr td a', elm).text();
       }
 
-      if (i === 3) {
+      if (i === 2) {
         $('.people tr:nth-child(1) td a', elm).each((ii, elem) => {
           let character = $(elem).attr('href');
           const lastThree = character[character.length - 4];
@@ -220,7 +220,7 @@ const handleCharacter = async (html, nodeId) => {
         });
       }
 
-      if (i === 4) {
+      if (i === 3) {
         $('.people tr:nth-child(1) td a', elm).each((ii, elem) => {
           let character = $(elem).attr('href');
           const lastThree = character[character.length - 4];
