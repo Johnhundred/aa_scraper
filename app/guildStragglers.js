@@ -200,6 +200,8 @@ const getCharacterInfo = async (aCharacters) => {
 
         const actualNames = [];
         actualNames.push(names[Math.floor(Math.random() * names.length)]);
+        actualNames.push(names[Math.floor(Math.random() * names.length)]);
+        actualNames.push(names[Math.floor(Math.random() * names.length)]);
         names = actualNames;
         debug(`Found guilds: ${names}`);
 
